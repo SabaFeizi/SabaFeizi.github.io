@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build
 
 # ---- preview: production-like static server with full security headers ----
-FROM nginx:1.27-alpine AS preview
+FROM nginx:1.29-alpine AS preview
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/_site /usr/share/nginx/html
 EXPOSE 8081
