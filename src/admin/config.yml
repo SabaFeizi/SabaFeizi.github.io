@@ -10,8 +10,7 @@ logo_url: /assets/favicon.png
 
 backend:
   name: github
-  # Set at launch (Milestone 4): "<github-username>/<github-username>.github.io"
-  repo: OWNER/OWNER.github.io
+  repo: SabaFeizi/SabaFeizi.github.io
   branch: main
   # Set at launch: URL of the Sveltia CMS Authenticator (Cloudflare Worker)
   base_url: https://sveltia-cms-auth.example.workers.dev
