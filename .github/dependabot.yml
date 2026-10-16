@@ -11,6 +11,9 @@ updates:
     groups:
       npm-dependencies:
         patterns: ["*"]
+    ignore:
+      # Must be upgraded together with the Playwright Docker image (see Dockerfile): done by hand.
+      - dependency-name: "@playwright/test"
     open-pull-requests-limit: 5
 
   - package-ecosystem: github-actions
@@ -29,3 +32,9 @@ updates:
       interval: monthly
     cooldown:
       default-days: 14
+    ignore:
+      # Stay on the current Node.js long-term-support line; major upgrades are done by hand.
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      # Must match the @playwright/test version in package.json: upgraded by hand.
+      - dependency-name: "mcr.microsoft.com/playwright"

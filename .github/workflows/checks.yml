@@ -24,7 +24,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run Playwright against the production build (nginx with strict headers)
+      - name: Run Playwright against the production build (served like GitHub Pages)
         run: |
           docker compose --profile test build preview test
           docker compose up -d preview
