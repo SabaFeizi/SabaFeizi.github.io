@@ -874,6 +874,62 @@ ul.regular-list li::before {
 
 
 /**
+ * Certificates as a list: one certificate per row, a small thumbnail with the title and date beside it
+ */
+
+.certs-layout-list .project-list {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.certs-layout-list .project-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  background: var(--border-gradient-onyx);
+  box-shadow: var(--shadow-2);
+  z-index: 1;
+}
+
+.certs-layout-list .project-card::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  background: var(--bg-gradient-jet);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.certs-layout-list .project-img {
+  width: 72px;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  border-radius: 8px;
+}
+
+/* the thumbnail is too small for the "eye" overlay; the hover state highlights the title instead */
+.certs-layout-list .project-item-icon-box { display: none; }
+
+.certs-layout-list .project-card:is(:hover, :focus-visible) img { transform: none; }
+
+.certs-layout-list .project-text { min-width: 0; }
+
+.certs-layout-list :is(.project-title, .project-category) { margin-left: 0; }
+
+.certs-layout-list .project-title {
+  font-size: var(--fs-5);
+  margin-bottom: 4px;
+}
+
+.certs-layout-list .project-category { font-size: var(--fs-6); }
+
+.certs-layout-list .project-card:is(:hover, :focus-visible) .project-title { color: var(--orange-yellow-crayola); }
+
+
+
+/**
  * certificate dialog (styled after the vCard testimonials modal)
  */
 
@@ -1422,6 +1478,8 @@ ul.regular-list li::before {
 
   .project-img, .blog-banner-box { border-radius: 16px; }
 
+  .certs-layout-list .project-img { width: 88px; }
+
   .blog-posts-list { gap: 30px; }
 
   .blog-content { padding: 25px; }
@@ -1599,6 +1657,8 @@ ul.regular-list li::before {
    */
 
   .project-list { grid-template-columns: repeat(3, 1fr); }
+
+  .certs-layout-list .project-list { grid-template-columns: 1fr; }
 
 
 

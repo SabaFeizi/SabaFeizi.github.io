@@ -6,7 +6,7 @@
     <h2 class="h2 article-title" id="certificates-title" tabindex="-1">Certificates</h2>
   </header>
 
-  <section class="projects" data-filter-root>
+  <section class="projects certs-layout-list" data-filter-root>
 
     {% if cats.length > 1 %}
     <ul class="filter-list" aria-label="Filter certificates by category">
@@ -39,8 +39,10 @@
             {% image cert.image, "", [400, 800], "(min-width: 1024px) 280px, (min-width: 768px) 320px, 90vw" %}
           </span>
 
+          <span class="project-text">
           <span class="project-title">{{ cert.title }}</span>
           <span class="project-category">{{ cert.issuer }}{% if cert.issue_date %} · <time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | monthYear }}</time>{% endif %}</span>
+          </span>
 
         </button>
       </li>
