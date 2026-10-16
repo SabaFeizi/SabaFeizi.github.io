@@ -1,7 +1,8 @@
 import { HtmlBasePlugin } from "@11ty/eleventy";
 import Image, { generateHTML } from "@11ty/eleventy-img";
 import markdownIt from "markdown-it";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, mkdirSync, writeFileSync, watch } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const IS_DEV = process.env.ELEVENTY_ENV === "development";
@@ -135,6 +136,9 @@ export default function (eleventyConfig) {
 
   eleventyConfig.on("eleventy.before", ({ directories }) => {
     IMAGE_OUTPUT.outputDir = path.join(directories.output, "assets/img/");
+    // Validate all content before every build and every dev-server rebuild
+    // (e.g. after a save in the admin panel). Throws — and stops the build — on invalid content.
+    execFileSync(process.execPath, ["scripts/validate-content.mjs"], { stdio: "inherit" });
   });
 
   if (process.env.ELEVENTY_POLLING) {
@@ -163,7 +167,37 @@ export default function (eleventyConfig) {
     "node_modules/@fontsource/poppins/files/poppins-latin-ext-{300,400,500,600}-normal.woff2": "assets/fonts",
   });
   eleventyConfig.addPassthroughCopy({ "src/robots.txt": "robots.txt" });
+
+  // Admin panel: static page + config, and the version-pinned CMS bundle from node_modules
+  // (self-hosted so no third-party script runs on the admin origin).
+  eleventyConfig.addPassthroughCopy({ "src/admin/*.{html,yml,js}": "admin" });
+  eleventyConfig.addPassthroughCopy({
+    "node_modules/@sveltia/cms/dist/sveltia-cms.js": "admin/sveltia-cms.js",
+    "node_modules/@sveltia/cms/dist/chunks/react-dom.js": "admin/chunks/react-dom.js",
+  });
   eleventyConfig.addWatchTarget("src/assets/");
+
+  // Dev server only: Eleventy does not rebuild when a file is deleted (e.g. a certificate or
+  // post removed in the admin panel). Watch the content folders and touch a trigger file
+  // that Eleventy watches, so deletions show up in the local preview too.
+  if (process.argv.includes("--serve")) {
+    const trigger = ".cache/rebuild-trigger";
+    mkdirSync(".cache", { recursive: true });
+    if (!existsSync(trigger)) writeFileSync(trigger, "");
+    eleventyConfig.addWatchTarget(trigger);
+    // .gitignore lists .cache/, and Eleventy skips git-ignored paths when watching.
+    // Nothing under src/ is git-ignored, so this only affects the trigger file.
+    eleventyConfig.setUseGitIgnore(false);
+    if (!globalThis.__contentDeleteWatchers) {
+      globalThis.__contentDeleteWatchers = ["src/_data", "src/blog", "src/assets/uploads"].map((dir) =>
+        watch(dir, { recursive: true }, (event, file) => {
+          if (event === "rename" && file && !existsSync(path.join(dir, file))) {
+            writeFileSync(trigger, String(Date.now()));
+          }
+        }).unref(),
+      );
+    }
+  }
 
   // Markdown for blog post bodies
   eleventyConfig.setLibrary("md", md);
@@ -197,6 +231,9 @@ export default function (eleventyConfig) {
       .filter((c) => c.visible !== false)
       .sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || `${b.issue_date}`.localeCompare(`${a.issue_date}`)),
   );
+  // Visibility switches from the admin panel. A missing switch means "shown".
+  eleventyConfig.addFilter("isOn", (value) => value !== false);
+  eleventyConfig.addFilter("shown", (items) => (items || []).filter((i) => i && i.visible !== false));
   eleventyConfig.addFilter("categories", (items) => [...new Set(items.map((i) => i.category).filter(Boolean))]);
   // Safe JSON for <script type="application/ld+json"> ("<" escaped so "</script>" can't break out)
   eleventyConfig.addFilter("personJsonLd", (site) =>
@@ -205,9 +242,13 @@ export default function (eleventyConfig) {
       "@type": "Person",
       name: site.name,
       jobTitle: (site.title_lines || []).join(" "),
-      email: site.email ? `mailto:${site.email}` : undefined,
-      address: site.location || undefined,
-      sameAs: (site.socials || []).map((s) => safeUrl(s.url)).filter((u) => u !== "#"),
+      // Respect the admin panel's show/hide switches here too.
+      email: site.email && site.show_email !== false ? `mailto:${site.email}` : undefined,
+      address: site.location && site.show_location !== false ? site.location : undefined,
+      sameAs:
+        site.show_socials === false
+          ? []
+          : (site.socials || []).filter((s) => s.visible !== false).map((s) => safeUrl(s.url)).filter((u) => u !== "#"),
     }).replace(/</g, "\\u003c"),
   );
 

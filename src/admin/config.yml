@@ -1,0 +1,366 @@
+# yaml-language-server: $schema=../../node_modules/@sveltia/cms/schema/sveltia-cms.json
+#
+# Admin panel (Sveltia CMS) for Saba Famil Feizi's website.
+# Every save becomes a commit in the GitHub repository; GitHub Actions then validates
+# the content (scripts/validate-content.mjs) and rebuilds the site. The rules below
+# mirror the JSON Schemas in /schemas so mistakes are caught while editing.
+
+app_title: Saba's website — Admin
+logo_url: /assets/favicon.png
+
+backend:
+  name: github
+  # Set at launch (Milestone 4): "<github-username>/<github-username>.github.io"
+  repo: OWNER/OWNER.github.io
+  branch: main
+  # Set at launch: URL of the Sveltia CMS Authenticator (Cloudflare Worker)
+  base_url: https://sveltia-cms-auth.example.workers.dev
+  # Only "Sign in with GitHub" (no pasted access tokens)
+  auth_methods: [oauth]
+  commit_messages:
+    create: "Add {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "Upload “{{path}}”"
+    deleteMedia: "Delete “{{path}}”"
+
+publish_mode: simple
+
+# Uploads: stored in the repo, re-encoded to WebP in the browser (which strips EXIF/GPS),
+# renamed to safe file names and limited to 8 MB. The build re-encodes them again.
+media_folder: src/assets/uploads
+public_folder: /assets/uploads
+media_libraries:
+  default:
+    config:
+      max_file_size: 8000000
+      slugify_filename: true
+  # Stock photo providers are not used (and would store API keys in the browser).
+  stock_assets: false
+  all:
+    transformations:
+      raster_image:
+        format: webp
+        quality: 85
+        width: 2400
+        height: 2400
+
+# File names for new certificates and posts: lowercase, ASCII, dashes.
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+  lowercase: true
+  maxlength: 80
+
+output:
+  omit_empty_optional_fields: false
+
+collections:
+
+  # ───────────────────────── Site-wide content (single files) ─────────────────────────
+  - name: pages
+    label: Site content
+    icon: home
+    description: Your profile, the About tab and the Resume tab.
+    files:
+
+      - name: site
+        label: Profile & settings
+        icon: person
+        file: src/_data/site.json
+        fields:
+          - name: name
+            label: Full name
+            widget: string
+            hint: Used in the page title and for search engines.
+          - name: name_lines
+            label: Name as shown in the sidebar
+            widget: list
+            hint: One line per entry, e.g. "Saba" and "Famil Feizi".
+            min: 1
+            max: 3
+            field: { name: line, label: Line, widget: string }
+          - name: title_lines
+            label: Title badge
+            widget: list
+            hint: One line per entry, e.g. "PhD Candidate" and "in Artificial Intelligence".
+            min: 1
+            max: 3
+            field: { name: line, label: Line, widget: string }
+          - name: avatar
+            label: Profile photo
+            widget: image
+            accept: image/png,image/jpeg,image/webp,image/avif
+            choose_url: false
+            hint: A square-ish photo works best.
+          - name: avatar_alt
+            label: Photo description (for screen readers)
+            widget: string
+            required: false
+          - { name: show_email, label: 'Show email', widget: boolean, default: true }
+          - name: email
+            label: Email
+            widget: string
+            pattern: ['^[^\s@]+@[^\s@]+\.[^\s@]+$', 'Enter a valid email address']
+          - { name: show_phone, label: 'Show phone', widget: boolean, default: true }
+          - name: phone
+            label: Phone
+            widget: string
+            required: false
+            pattern: ['^[0-9+()\s.-]{0,30}$', 'Digits, spaces and + ( ) . - only']
+          - { name: show_location, label: 'Show location', widget: boolean, default: true }
+          - name: location
+            label: Location
+            widget: string
+            required: false
+          - { name: show_socials, label: 'Show social links', widget: boolean, default: true }
+          - name: socials
+            label: Social links
+            label_singular: Social link
+            widget: list
+            summary: "{{label}}"
+            max: 12
+            fields:
+              - { name: label, label: Name, widget: string, hint: 'e.g. "LinkedIn"' }
+              - { name: visible, label: Show this link, widget: boolean, default: true }
+              - name: icon
+                label: Icon
+                widget: select
+                options:
+                  - { label: LinkedIn, value: logo-linkedin }
+                  - { label: Google Scholar, value: school }
+                  - { label: GitHub, value: logo-github }
+                  - { label: X, value: logo-x }
+                  - { label: Twitter (bird), value: logo-twitter }
+                  - { label: Medium, value: logo-medium }
+                  - { label: YouTube, value: logo-youtube }
+                  - { label: Instagram, value: logo-instagram }
+                  - { label: Facebook, value: logo-facebook }
+                  - { label: Mastodon, value: logo-mastodon }
+                  - { label: Website, value: globe-outline }
+                  - { label: Email, value: mail-outline }
+                  - { label: CV / document, value: document-text-outline }
+              - name: url
+                label: Link
+                widget: string
+                pattern: ['^(https?://\S+|mailto:\S+)$', 'Must start with https:// (or mailto:)']
+          - name: tabs
+            label: Menu tabs
+            widget: object
+            hint: Switch whole tabs on or off. The About tab is always shown.
+            fields:
+              - { name: resume, label: Show the Resume tab, widget: boolean, default: true }
+              - { name: certificates, label: Show the Certificates tab, widget: boolean, default: true }
+              - { name: blog, label: Show the Blog tab (and blog post pages), widget: boolean, default: true }
+          - name: seo
+            label: Search engines & sharing
+            widget: object
+            collapsed: true
+            fields:
+              - { name: title, label: Browser tab title, widget: string }
+              - { name: description, label: Description, widget: text, hint: 'One or two sentences shown by search engines (max 300 characters).' }
+              - name: share_image
+                label: Image for link previews
+                widget: image
+                required: false
+                accept: image/png,image/jpeg,image/webp
+                choose_url: false
+          - name: url
+            label: Website address
+            widget: string
+            hint: The full address of the live site, ending with "/". Set once at launch; you rarely need to change it.
+            pattern: ['^https://[^\s<>"/]+(/[^\s<>"]*)?/$', 'Must start with https:// and end with /']
+
+      - name: about
+        label: About tab
+        icon: badge
+        file: src/_data/about.json
+        fields:
+          - { name: heading, label: Heading, widget: string, default: About me }
+          - { name: show_intro, label: 'Show the introduction', widget: boolean, default: true }
+          - name: intro
+            label: Introduction
+            widget: markdown
+            buttons: [bold, italic, link, bulleted-list, numbered-list]
+            editor_components: []
+          - { name: show_publications, label: 'Show the publications line', widget: boolean, default: true }
+          - name: publications
+            label: Publications line
+            widget: markdown
+            required: false
+            minimal: true
+            buttons: [bold, italic, link]
+            editor_components: []
+            hint: 'e.g. "To see my latest publications and preprints, check out my Google Scholar page." with a link.'
+          - { name: show_news, label: 'Show News & Announcements', widget: boolean, default: true }
+          - { name: news_heading, label: News heading, widget: string, required: false, default: "News & Announcements" }
+          - name: news
+            label: News & announcements
+            label_singular: Announcement
+            widget: list
+            required: false
+            summary: "{{text}}"
+            hint: Newest first. Drag to reorder.
+            fields:
+              - { name: visible, label: Show this announcement, widget: boolean, default: true }
+              - name: text
+                label: Text
+                widget: markdown
+                minimal: true
+                buttons: [bold, italic, link]
+                editor_components: []
+          - { name: show_nutshell, label: 'Show "In a nutshell" cards', widget: boolean, default: true }
+          - { name: nutshell_heading, label: '"In a nutshell" heading', widget: string, required: false, default: "In a Nutshell: What I'm doing" }
+          - name: nutshell
+            label: '"In a nutshell" cards'
+            label_singular: Card
+            widget: list
+            required: false
+            summary: "{{title}}"
+            fields:
+              - { name: visible, label: Show this card, widget: boolean, default: true }
+              - &icon_select
+                name: icon
+                label: Icon
+                widget: select
+                options:
+                  - { label: Flask (research), value: flask-outline }
+                  - { label: Chart (data / analytics), value: analytics-outline }
+                  - { label: Network (graphs), value: git-network-outline }
+                  - { label: Graduation cap, value: school-outline }
+                  - { label: Book, value: book-outline }
+                  - { label: Briefcase, value: briefcase-outline }
+                  - { label: People, value: people-outline }
+                  - { label: Ribbon (award / service), value: ribbon-outline }
+                  - { label: Trophy, value: trophy-outline }
+                  - { label: Medical kit, value: medkit-outline }
+                  - { label: Chip (AI / hardware), value: hardware-chip-outline }
+                  - { label: Code, value: code-slash-outline }
+                  - { label: Light bulb (ideas), value: bulb-outline }
+                  - { label: Globe, value: globe-outline }
+                  - { label: Rocket, value: rocket-outline }
+                  - { label: Library, value: library-outline }
+                  - { label: Megaphone (talks), value: megaphone-outline }
+                  - { label: Microphone, value: mic-outline }
+                  - { label: Newspaper, value: newspaper-outline }
+                  - { label: Heart, value: heart-outline }
+                  - { label: Chat bubbles, value: chatbubbles-outline }
+                  - { label: Document, value: document-text-outline }
+                  - { label: Laptop, value: laptop-outline }
+                  - { label: Leaf, value: leaf-outline }
+                  - { label: Tools, value: construct-outline }
+                  - { label: Palette, value: color-palette-outline }
+              - { name: title, label: Title, widget: string }
+              - name: text
+                label: Text
+                widget: markdown
+                minimal: true
+                buttons: [bold, italic, link]
+                editor_components: []
+
+      - name: resume
+        label: Resume tab
+        icon: work_history
+        file: src/_data/resume.json
+        fields:
+          - { name: heading, label: Heading, widget: string, default: Resume }
+          - name: sections
+            label: Sections
+            label_singular: Section
+            widget: list
+            summary: "{{title}}"
+            hint: e.g. Education, Experience, Teaching, Service. Drag to reorder.
+            fields:
+              - { name: title, label: Section title, widget: string }
+              - { name: visible, label: Show this section, widget: boolean, default: true }
+              - *icon_select
+              - name: items
+                label: Entries
+                label_singular: Entry
+                widget: list
+                summary: "{{title}} — {{period}}"
+                fields:
+                  - { name: title, label: Title, widget: string, hint: 'e.g. "Ph.D. in Artificial Intelligence"' }
+                  - { name: visible, label: Show this entry, widget: boolean, default: true }
+                  - { name: period, label: Period, widget: string, required: false, hint: 'e.g. "Sep. 2022 — present"' }
+                  - name: body
+                    label: Details
+                    widget: markdown
+                    required: false
+                    buttons: [bold, italic, link, bulleted-list]
+                    editor_components: []
+                    hint: Each line is shown on its own line.
+
+  # ───────────────────────── Certificates (one file per certificate) ─────────────────────────
+  - name: certificates
+    label: Certificates
+    label_singular: Certificate
+    icon: workspace_premium
+    folder: src/_data/certificates
+    extension: json
+    format: json
+    identifier_field: title
+    slug: "{{title}}"
+    summary: "{{title}} — {{issuer}}"
+    sortable_fields: [order, title, issue_date]
+    fields:
+      - { name: title, label: Certificate name, widget: string }
+      - { name: issuer, label: Issued by, widget: string }
+      - { name: category, label: Category, widget: string, required: false, hint: 'Used for the filter buttons, e.g. "Machine Learning". Use the same spelling for certificates in the same category.' }
+      - { name: issue_date, label: Issue date, widget: datetime, type: date, format: YYYY-MM-DD, required: false }
+      - { name: expiry_date, label: Expiry date, widget: datetime, type: date, format: YYYY-MM-DD, required: false }
+      - { name: credential_id, label: Credential ID, widget: string, required: false }
+      - name: verify_url
+        label: Verification link
+        widget: string
+        required: false
+        pattern: ['^(https?://\S+)?$', 'Must start with https://']
+      - name: image
+        label: Certificate image
+        widget: image
+        accept: image/png,image/jpeg,image/webp,image/avif
+        choose_url: false
+        hint: A photo or scan of the certificate (PNG, JPG or WebP).
+      - { name: description, label: Short description, widget: text, required: false }
+      - { name: order, label: Position, widget: number, value_type: int, min: 0, max: 9999, default: 100, hint: Lower numbers are shown first. }
+      - { name: visible, label: Show on the website, widget: boolean, default: true }
+
+  # ───────────────────────── Blog posts ─────────────────────────
+  - name: blog
+    label: Blog
+    label_singular: Blog post
+    icon: article
+    folder: src/blog
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    slug: "{{title}}"
+    summary: "{{title}} ({{date}})"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, type: date, format: YYYY-MM-DD, default: "{{now}}" }
+      - { name: category, label: Category, widget: string, required: false, hint: 'e.g. "Medium", "Research", "Personal"' }
+      - name: cover
+        label: Cover image
+        widget: image
+        accept: image/png,image/jpeg,image/webp,image/avif
+        choose_url: false
+      - { name: cover_alt, label: Cover image description, widget: string, required: false }
+      - { name: excerpt, label: Short summary, widget: text, hint: Shown on the blog card (max 500 characters). }
+      - name: external_url
+        label: External link
+        widget: string
+        required: false
+        hint: If the post lives on another website (Medium, a journal…), paste its address here and leave the text below empty.
+        pattern: ['^(https?://\S+)?$', 'Must start with https://']
+      - { name: draft, label: Draft (hide from the website), widget: boolean, default: false }
+      - name: body
+        label: Post text
+        widget: markdown
+        required: false
+        hint: Only for posts written on this website.
+        buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list, code]
+        editor_components: [image]
+        linked_images: false

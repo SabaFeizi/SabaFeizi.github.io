@@ -27,11 +27,15 @@
 
   <div class="sidebar-info_more" id="sidebar-more">
 
+    {%- set showEmail = (site.show_email | isOn) and site.email %}
+    {%- set showPhone = (site.show_phone | isOn) and site.phone %}
+    {%- set showLocation = (site.show_location | isOn) and site.location %}
+    {% if showEmail or showPhone or showLocation %}
     <div class="separator"></div>
 
     <ul class="contacts-list">
 
-      {% if site.email %}
+      {% if showEmail %}
       <li class="contact-item">
         <div class="icon-box">{% icon "mail-outline" %}</div>
         <div class="contact-info">
@@ -41,7 +45,7 @@
       </li>
       {% endif %}
 
-      {% if site.phone %}
+      {% if showPhone %}
       <li class="contact-item">
         <div class="icon-box">{% icon "phone-portrait-outline" %}</div>
         <div class="contact-info">
@@ -51,7 +55,7 @@
       </li>
       {% endif %}
 
-      {% if site.location %}
+      {% if showLocation %}
       <li class="contact-item">
         <div class="icon-box">{% icon "location-outline" %}</div>
         <div class="contact-info">
@@ -62,11 +66,14 @@
       {% endif %}
 
     </ul>
+    {% endif %}
 
+    {%- set socials = site.socials | shown %}
+    {% if (site.show_socials | isOn) and socials.length %}
     <div class="separator"></div>
 
     <ul class="social-list">
-      {% for social in site.socials %}
+      {% for social in socials %}
       <li class="social-item">
         <a href="{{ social.url | safeUrl }}" class="social-link" aria-label="{{ social.label }}" title="{{ social.label }}" rel="noopener noreferrer me">
           {% icon social.icon %}
@@ -74,6 +81,7 @@
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
 
   </div>
 

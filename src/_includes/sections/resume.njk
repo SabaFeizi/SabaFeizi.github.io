@@ -4,7 +4,9 @@
     <h2 class="h2 article-title" id="resume-title" tabindex="-1">{{ resume.heading }}</h2>
   </header>
 
-  {% for section in resume.sections %}
+  {% for section in resume.sections | shown %}
+  {%- set entries = section.items | shown %}
+  {% if entries.length %}
   <section class="timeline">
 
     <div class="title-wrapper">
@@ -13,7 +15,7 @@
     </div>
 
     <ol class="timeline-list">
-      {% for item in section.items %}
+      {% for item in entries %}
       <li class="timeline-item">
         <h4 class="h4 timeline-item-title">{{ item.title }}</h4>
         {% if item.period %}<span>{{ item.period }}</span>{% endif %}
@@ -23,6 +25,7 @@
     </ol>
 
   </section>
+  {% endif %}
   {% endfor %}
 
 </article>

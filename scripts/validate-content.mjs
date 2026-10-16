@@ -6,6 +6,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import matter from "gray-matter";
 import markdownIt from "markdown-it";
+import sharp from "sharp";
 import { readFileSync, readdirSync, existsSync, openSync, readSync, closeSync, statSync } from "node:fs";
 import path from "node:path";
 
@@ -82,8 +83,21 @@ for (const f of readdirSync(UPLOADS)) {
   if (statSync(file).size > MAX_UPLOAD_BYTES) fail(file, `file is larger than ${MAX_UPLOAD_BYTES / 1024 / 1024} MB`);
   const kind = sniffImage(file);
   const ext = f.split(".").pop().toLowerCase().replace("jpg", "jpeg");
-  if (!kind) fail(file, "file content is not a PNG, JPEG, WebP or AVIF image");
-  else if (kind !== ext) fail(file, `file content is ${kind} but the name ends in .${ext}`);
+  if (!kind) { fail(file, "file content is not a PNG, JPEG, WebP or AVIF image"); continue; }
+  if (kind !== ext) fail(file, `file content is ${kind} but the name ends in .${ext}`);
+
+  // Privacy: the admin panel strips photo metadata when it converts uploads, but it uploads
+  // the original if conversion fails. Reject anything still carrying EXIF/XMP/IPTC
+  // (GPS location, camera serial numbers, ...) so it is noticed and removed.
+  try {
+    const meta = await sharp(file).metadata();
+    const found = ["exif", "xmp", "iptc"].filter((k) => meta[k]);
+    if (found.length) {
+      fail(file, `image contains ${found.join("/").toUpperCase()} metadata (may include location) — re-upload it through the admin panel or strip the metadata`);
+    }
+  } catch (e) {
+    fail(file, `image cannot be decoded (${e.message})`);
+  }
 }
 
 // ---------------------------------------------------------------------------

@@ -1,30 +1,48 @@
 {
   "heading": "About me",
-  "intro": "I'm a researcher working at the intersection of artificial intelligence and real-world applications. This is placeholder text — replace it from the admin panel with a short introduction about your work, your institution and what you are focusing on.\n\nTo see my latest publications and preprints, check out my [Google Scholar page.](https://scholar.google.com/)",
+  "show_intro": true,
+  "intro": "I'm a researcher working at the intersection of artificial intelligence and real-world applications. This is placeholder text — replace it from the admin panel with a short introduction about your work, your institution and what you are focusing on.",
+  "show_publications": true,
+  "publications": "To see my latest publications and preprints, check out my [Google Scholar page.](https://scholar.google.com/)",
+  "show_news": true,
   "news_heading": "News & Announcements",
   "news": [
-    { "text": "Placeholder announcement: a paper was accepted at an upcoming conference. [Read the paper](https://example.com/)" },
-    { "text": "Placeholder announcement: I started a new research collaboration." },
-    { "text": "Placeholder announcement: I gave a talk about my recent work at a workshop." }
+    {
+      "visible": true,
+      "text": "Placeholder announcement: a paper was accepted at an upcoming conference. [Read the paper](https://example.com/)"
+    },
+    {
+      "visible": true,
+      "text": "Placeholder announcement: I started a new research collaboration."
+    },
+    {
+      "visible": true,
+      "text": "Placeholder announcement: I gave a talk about my recent work at a workshop."
+    }
   ],
+  "show_nutshell": true,
   "nutshell_heading": "In a Nutshell: What I'm doing",
   "nutshell": [
     {
+      "visible": true,
       "icon": "flask-outline",
       "title": "Research Area One",
       "text": "A short description of a current research project. Links are supported, for example [the project page](https://example.com/)."
     },
     {
+      "visible": true,
       "icon": "analytics-outline",
       "title": "Research Area Two",
       "text": "A short description of another project, the methods involved and the people you are working with."
     },
     {
+      "visible": true,
       "icon": "git-network-outline",
       "title": "Research Area Three",
       "text": "A short description of a collaboration or side project that you want visitors to know about."
     },
     {
+      "visible": true,
       "icon": "school-outline",
       "title": "Teaching & Mentoring",
       "text": "A short description of teaching, supervision or outreach activities."

@@ -2,7 +2,8 @@
 layout: layouts/base.njk
 permalink: /
 ---
+{%- set tabs = site.tabs or {} %}
 {% include "sections/about.njk" %}
-{% include "sections/resume.njk" %}
-{% include "sections/certificates.njk" %}
-{% include "sections/blog.njk" %}
+{% if tabs.resume | isOn %}{% include "sections/resume.njk" %}{% endif %}
+{% if tabs.certificates | isOn %}{% include "sections/certificates.njk" %}{% endif %}
+{% if tabs.blog | isOn %}{% include "sections/blog.njk" %}{% endif %}

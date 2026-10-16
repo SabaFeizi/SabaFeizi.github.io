@@ -74,6 +74,9 @@
           },
           "url": {
             "$ref": "defs.schema.json#/$defs/safeUrl"
+          },
+          "visible": {
+            "type": "boolean"
           }
         }
       }
@@ -95,6 +98,33 @@
         },
         "share_image": {
           "$ref": "defs.schema.json#/$defs/optionalUpload"
+        }
+      }
+    },
+    "show_email": {
+      "type": "boolean"
+    },
+    "show_phone": {
+      "type": "boolean"
+    },
+    "show_location": {
+      "type": "boolean"
+    },
+    "show_socials": {
+      "type": "boolean"
+    },
+    "tabs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "resume": {
+          "type": "boolean"
+        },
+        "certificates": {
+          "type": "boolean"
+        },
+        "blog": {
+          "type": "boolean"
         }
       }
     }

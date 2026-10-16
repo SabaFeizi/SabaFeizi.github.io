@@ -4,26 +4,33 @@
     <h2 class="h2 article-title" id="about-title" tabindex="-1">{{ about.heading }}</h2>
   </header>
 
+  {%- set showIntro = (about.show_intro | isOn) and about.intro %}
+  {%- set showPublications = (about.show_publications | isOn) and about.publications %}
+  {% if showIntro or showPublications %}
   <section class="about-text">
-    {{ about.intro | md | safe }}
+    {% if showIntro %}{{ about.intro | md | safe }}{% endif %}
+    {% if showPublications %}{{ about.publications | md | safe }}{% endif %}
   </section>
+  {% endif %}
 
-  {% if about.news and about.news.length %}
+  {%- set news = about.news | shown %}
+  {% if (about.show_news | isOn) and news.length %}
   <section class="about-text news" aria-labelledby="news-title">
     <h3 class="h3 service-title" id="news-title">{{ about.news_heading }}</h3>
     <ul class="regular-list">
-      {% for item in about.news %}
+      {% for item in news %}
       <li>{{ item.text | mdInline | safe }}</li>
       {% endfor %}
     </ul>
   </section>
   {% endif %}
 
-  {% if about.nutshell and about.nutshell.length %}
+  {%- set cards = about.nutshell | shown %}
+  {% if (about.show_nutshell | isOn) and cards.length %}
   <section class="service" aria-labelledby="nutshell-title">
     <h3 class="h3 service-title" id="nutshell-title">{{ about.nutshell_heading }}</h3>
     <ul class="service-list">
-      {% for card in about.nutshell %}
+      {% for card in cards %}
       <li class="service-item">
         <div class="service-icon-box">{% icon card.icon, "icon-service" %}</div>
         <div class="service-content-box">

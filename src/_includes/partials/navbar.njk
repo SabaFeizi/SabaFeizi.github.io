@@ -1,18 +1,19 @@
 {#- Tab navigation. On the home page the tabs switch in place (hash routing);
     on a blog post page they link back to the home page tabs. -#}
+{%- set tabs = site.tabs or {} %}
 {%- set navPages = [
-  { id: "about", label: "About" },
-  { id: "resume", label: "Resume" },
-  { id: "certificates", label: "Certificates" },
-  { id: "blog", label: "Blog" }
+  { id: "about", label: "About", on: true },
+  { id: "resume", label: "Resume", on: tabs.resume | isOn },
+  { id: "certificates", label: "Certificates", on: tabs.certificates | isOn },
+  { id: "blog", label: "Blog", on: tabs.blog | isOn }
 ] %}
 {%- set activeTab = "blog" if title else "about" %}
 <nav class="navbar" aria-label="Sections">
   <ul class="navbar-list">
-    {% for p in navPages %}
+    {% for p in navPages %}{% if p.on %}
     <li class="navbar-item">
       <a href="{{ '/' if title }}#{{ p.id }}" class="navbar-link{% if p.id == activeTab %} active{% endif %}" data-nav-link="{{ p.id }}"{% if p.id == activeTab %} aria-current="page"{% endif %}>{{ p.label }}</a>
     </li>
-    {% endfor %}
+    {% endif %}{% endfor %}
   </ul>
 </nav>

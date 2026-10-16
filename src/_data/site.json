@@ -1,44 +1,57 @@
 {
-  "url": "https://example.github.io/",
   "name": "Saba Famil Feizi",
   "name_lines": [
     "Saba",
     "Famil Feizi"
   ],
   "title_lines": [
-    "Researcher",
+    "M.Sc. Student",
     "in Artificial Intelligence"
   ],
-  "avatar": "/assets/uploads/avatar.png",
+  "avatar": "/assets/uploads/1790197695715.webp",
   "avatar_alt": "Portrait of Saba Famil Feizi",
+  "show_email": true,
   "email": "saba@example.com",
+  "show_phone": true,
   "phone": "",
+  "show_location": true,
   "location": "City, Country",
+  "show_socials": true,
   "socials": [
     {
       "label": "LinkedIn",
+      "visible": true,
       "icon": "logo-linkedin",
       "url": "https://www.linkedin.com/"
     },
     {
       "label": "Google Scholar",
+      "visible": true,
       "icon": "school",
       "url": "https://scholar.google.com/"
     },
     {
       "label": "GitHub",
+      "visible": true,
       "icon": "logo-github",
       "url": "https://github.com/"
     },
     {
       "label": "X (Twitter)",
+      "visible": true,
       "icon": "logo-twitter",
       "url": "https://x.com/"
     }
   ],
+  "tabs": {
+    "resume": true,
+    "certificates": true,
+    "blog": true
+  },
   "seo": {
     "title": "Saba Famil Feizi — Personal Website",
     "description": "Personal website of Saba Famil Feizi: research, resume, certificates and blog.",
     "share_image": "/assets/uploads/avatar.png"
-  }
+  },
+  "url": "https://example.github.io/"
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!--
+    Admin-only Content Security Policy.
+    - Scripts: only the self-hosted, version-pinned CMS bundle (no CDN scripts).
+    - connect-src: GitHub's API (the CMS talks to GitHub directly from the browser) and its public status page.
+    - style-src 'unsafe-inline': required by the CMS UI (styles are injected by the bundle).
+    - font-src jsDelivr: the CMS's own UI and icon fonts (fonts cannot execute code).
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' blob: data: https://avatars.githubusercontent.com; media-src blob:; frame-src blob:; worker-src 'self' blob:; connect-src 'self' blob: data: https://api.github.com https://www.githubstatus.com; manifest-src blob:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin</title>
+</head>
+<body>
+  <!-- frame-guard.js loads the CMS bundle only when this page is not inside a frame. -->
+  <script src="frame-guard.js"></script>
+</body>
+</html>
