@@ -26,7 +26,7 @@ COPY --from=build /app/_site /usr/share/nginx/html
 EXPOSE 8081
 
 # ---- test: Playwright (Chromium, Firefox, WebKit) runs against the preview server ----
-FROM mcr.microsoft.com/playwright:v1.63.0-noble AS test
+FROM mcr.microsoft.com/playwright:v1.64.1-noble AS test
 WORKDIR /app
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false \
     NPM_CONFIG_FUND=false
