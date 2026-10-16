@@ -1,0 +1,72 @@
+# Builds the site from the repository content and publishes it to GitHub Pages.
+# Runs on every push to main — including every save made in the admin panel.
+#
+# Security model:
+# - The build job has read-only access, no secrets, and does not keep git credentials.
+#   Content is validated and the pipeline's security tests run before anything is built.
+# - The deploy job runs no repository code at all: it only publishes the built artifact
+#   using a short-lived OIDC token (no stored secrets are needed for GitHub Pages).
+# - Every action is pinned to a full commit SHA (Dependabot keeps them up to date).
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Validate, test and build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      - name: Install dependencies (exact versions from the lockfile)
+        run: npm ci --no-audit --no-fund
+
+      - name: Validate content
+        run: npm run validate
+
+      - name: Content pipeline security tests
+        run: npm run test:unit
+
+      - name: Build site
+        run: npm run build
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: Publish to GitHub Pages
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

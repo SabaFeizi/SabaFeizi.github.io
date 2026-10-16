@@ -26,19 +26,21 @@
     </div>
     {% endif %}
 
+    <p class="visually-hidden" role="status" data-filter-status></p>
+
     {% if certs.length %}
     <ul class="project-list">
       {% asyncEach cert in certs %}
       <li class="project-item active" data-filter-item data-category="cat-{{ cats.indexOf(cert.category) + 1 }}">
         <button type="button" class="project-card" data-dialog-open="cert-{{ cert.slug }}" aria-haspopup="dialog">
 
-          <figure class="project-img">
+          <span class="project-img">
             <span class="project-item-icon-box">{% icon "eye-outline" %}</span>
             {% image cert.image, "", [400, 800], "(min-width: 1024px) 280px, (min-width: 768px) 320px, 90vw" %}
-          </figure>
+          </span>
 
-          <h3 class="project-title">{{ cert.title }}</h3>
-          <p class="project-category">{{ cert.issuer }}{% if cert.issue_date %} · <time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | monthYear }}</time>{% endif %}</p>
+          <span class="project-title">{{ cert.title }}</span>
+          <span class="project-category">{{ cert.issuer }}{% if cert.issue_date %} · <time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | monthYear }}</time>{% endif %}</span>
 
         </button>
       </li>
@@ -63,8 +65,8 @@
         <h3 class="h3 modal-title" id="cert-{{ cert.slug }}-title">{{ cert.title }}</h3>
         <dl class="cert-details">
           <div><dt>Issuer</dt><dd>{{ cert.issuer }}</dd></div>
-          {% if cert.issue_date %}<div><dt>Issued</dt><dd><time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | readableDate }}</time></dd></div>{% endif %}
-          {% if cert.expiry_date %}<div><dt>Expires</dt><dd><time datetime="{{ cert.expiry_date | isoDate }}">{{ cert.expiry_date | readableDate }}</time></dd></div>{% endif %}
+          {% if cert.issue_date %}<div><dt>Issued</dt><dd><time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | monthYear }}</time></dd></div>{% endif %}
+          {% if cert.expiry_date %}<div><dt>Expires</dt><dd><time datetime="{{ cert.expiry_date | isoDate }}">{{ cert.expiry_date | monthYear }}</time></dd></div>{% endif %}
           {% if cert.credential_id %}<div><dt>Credential ID</dt><dd>{{ cert.credential_id }}</dd></div>{% endif %}
         </dl>
         {% if cert.description %}<p class="cert-description">{{ cert.description }}</p>{% endif %}

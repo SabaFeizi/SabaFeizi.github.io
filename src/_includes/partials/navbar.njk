@@ -12,7 +12,7 @@
   <ul class="navbar-list">
     {% for p in navPages %}{% if p.on %}
     <li class="navbar-item">
-      <a href="{{ '/' if title }}#{{ p.id }}" class="navbar-link{% if p.id == activeTab %} active{% endif %}" data-nav-link="{{ p.id }}"{% if p.id == activeTab %} aria-current="page"{% endif %}>{{ p.label }}</a>
+      <a href="{{ '/' if title }}#{{ p.id }}" class="navbar-link{% if p.id == activeTab %} active{% endif %}" data-nav-link="{{ p.id }}"{% if p.id == activeTab %} aria-current="{{ 'true' if title else 'page' }}"{% endif %}>{{ p.label }}</a>
     </li>
     {% endif %}{% endfor %}
   </ul>

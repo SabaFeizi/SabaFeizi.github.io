@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 # ---- base: Node toolchain used for dev, build and tests ----
 FROM node:22-alpine AS base
 WORKDIR /app
@@ -24,6 +22,16 @@ RUN npm run build
 # ---- preview: production-like static server with full security headers ----
 FROM nginx:1.27-alpine AS preview
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY docker/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/_site /usr/share/nginx/html
 EXPOSE 8081
+
+# ---- test: Playwright (Chromium, Firefox, WebKit) runs against the preview server ----
+FROM mcr.microsoft.com/playwright:v1.63.0-noble AS test
+WORKDIR /app
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false \
+    NPM_CONFIG_FUND=false
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY playwright.config.js ./
+COPY tests ./tests
+CMD ["npx", "playwright", "test"]

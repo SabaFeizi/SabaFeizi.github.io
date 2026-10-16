@@ -12,13 +12,34 @@ services:
       - .:/app
       - node_modules:/app/node_modules
 
-  # Production build served by nginx with production-like headers: http://localhost:8081
+  # Production build served like GitHub Pages (no custom headers): http://localhost:8081
   preview:
     build:
       context: .
       target: preview
     ports:
       - "127.0.0.1:8081:8081"
+
+  # Browser tests against the production build: docker compose run --rm test
+  test:
+    build:
+      context: .
+      target: test
+    depends_on:
+      - preview
+    # Share the preview container's network so the browsers reach it as http://localhost:8081.
+    # localhost counts as a secure origin, which the admin (Sveltia CMS) requires — on the live
+    # site it is served over https.
+    network_mode: "service:preview"
+    environment:
+      BASE_URL: http://localhost:8081
+      CI: "1"
+    volumes:
+      - ./tests:/app/tests
+      - ./playwright.config.js:/app/playwright.config.js
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    profiles: ["test"]
 
 volumes:
   node_modules:

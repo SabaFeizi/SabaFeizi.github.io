@@ -4,8 +4,13 @@
 
   <div class="sidebar-info">
 
-    <figure class="avatar-box">
+    {%- set protectAvatar = site.protect_avatar | isOn %}
+    <figure class="avatar-box{% if protectAvatar %} is-protected{% endif %}">
+      {% ifAsync protectAvatar %}
+      {% image site.avatar, site.avatar_alt, [160, 300], "(min-width: 1250px) 150px, (min-width: 580px) 120px, 80px", { loading: "eager", fetchpriority: "high", draggable: "false" } %}
+      {% else %}
       {% image site.avatar, site.avatar_alt, [160, 300], "(min-width: 1250px) 150px, (min-width: 580px) 120px, 80px", { loading: "eager", fetchpriority: "high" } %}
+      {% endif %}
     </figure>
 
     <div class="info-content">

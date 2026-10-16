@@ -159,7 +159,7 @@ input, textarea, select {
 
 ::selection {
   background: var(--orange-yellow-crayola);
-  color: var(--smoky-black);
+  color: var(--eerie-black-2);
 }
 
 :focus { outline-color: var(--orange-yellow-crayola); }
@@ -171,7 +171,10 @@ input, textarea, select {
 
 [tabindex="-1"]:focus { outline: none; }
 
-html { font-family: var(--ff-poppins); }
+html {
+  font-family: var(--ff-poppins);
+  scroll-padding-bottom: 80px;
+}
 
 body { background: var(--smoky-black); }
 
@@ -332,7 +335,7 @@ article.active {
   #MAIN
 \*-----------------------------------*/
 
-main {
+.page {
   margin: 15px 12px;
   margin-bottom: 75px;
   min-width: 259px;
@@ -348,7 +351,7 @@ main {
 
 .sidebar {
   margin-bottom: 15px;
-  max-height: 112px;
+  max-height: 120px;
   overflow: hidden;
   transition: var(--transition-2);
 }
@@ -373,6 +376,25 @@ main {
 .avatar-box img {
   width: 80px;
   height: auto;
+}
+
+/* "Protect profile photo" switch: discourages casual saving (right-click "Save image",
+   dragging, long-press on phones). A transparent layer sits over the photo so the
+   browser's image menu is never offered. This cannot stop screenshots. */
+.avatar-box.is-protected { position: relative; }
+
+.avatar-box.is-protected img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+.avatar-box.is-protected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 .info-content .name {
@@ -507,7 +529,7 @@ main {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: hsla(240, 1%, 17%, 0.75);
+  background: hsla(240, 1%, 17%, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--jet);
@@ -532,7 +554,7 @@ main {
 }
 
 .navbar-link:hover,
-.navbar-link:focus { color: var(--light-gray-70); }
+.navbar-link:focus-visible { color: var(--light-gray); }
 
 .navbar-link.active { color: var(--orange-yellow-crayola); }
 
@@ -551,6 +573,12 @@ main {
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
   line-height: 1.6;
+}
+
+/* links in running text are underlined (not distinguished by colour alone) */
+:is(.about-text, .service-item-text, .timeline-text) a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .about-text p {
@@ -1257,7 +1285,7 @@ ul.regular-list li::before {
    * #MAIN
    */
 
-  main {
+  .page {
     margin-top: 60px;
     margin-bottom: 100px;
   }
@@ -1515,7 +1543,7 @@ ul.regular-list li::before {
    * MAIN
    */
 
-  main { margin-bottom: 60px; }
+  .page { margin-bottom: 60px; }
 
   .main-content {
     position: relative;
@@ -1547,6 +1575,11 @@ ul.regular-list li::before {
   }
 
   .navbar-link { font-weight: var(--fw-500); }
+
+  .navbar-link:hover,
+  .navbar-link:focus-visible { color: var(--light-gray-70); }
+
+  html { scroll-padding-bottom: 0; }
 
 
 
@@ -1628,7 +1661,7 @@ ul.regular-list li::before {
    * MAIN
    */
 
-  main {
+  .page {
     max-width: 1200px;
     margin-inline: auto;
     display: flex;
@@ -1704,6 +1737,24 @@ ul.regular-list li::before {
    */
 
   .timeline-text { max-width: 700px; }
+
+}
+
+
+
+
+
+/*-----------------------------------*\
+  #FORCED COLOURS
+\*-----------------------------------*/
+
+@media (forced-colors: active) {
+
+  .navbar-link.active,
+  .filter-item button.active {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
 
 }
 

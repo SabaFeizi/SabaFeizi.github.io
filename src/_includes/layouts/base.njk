@@ -36,13 +36,15 @@
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
 
-  <main>
+  <div class="page">
     {% include "partials/sidebar.njk" %}
 
-    <div class="main-content" id="content">
+    <div class="main-content">
       {% include "partials/navbar.njk" %}
-      {{ content | safe }}
+      <main id="content" tabindex="-1">
+        {{ content | safe }}
+      </main>
     </div>
-  </main>
+  </div>
 </body>
 </html>

@@ -10,6 +10,7 @@
   ],
   "avatar": "/assets/uploads/1790197695715.webp",
   "avatar_alt": "Portrait of Saba Famil Feizi",
+  "protect_avatar": true,
   "show_email": true,
   "email": "saba@example.com",
   "show_phone": true,

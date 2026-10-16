@@ -2,8 +2,10 @@
 layout: layouts/base.njk
 permalink: /
 ---
+{#- ifAsync (not if): the Certificates and Blog sections use the async image shortcode,
+    and Nunjucks renders nothing for async content inside a plain {% if %}. -#}
 {%- set tabs = site.tabs or {} %}
 {% include "sections/about.njk" %}
-{% if tabs.resume | isOn %}{% include "sections/resume.njk" %}{% endif %}
-{% if tabs.certificates | isOn %}{% include "sections/certificates.njk" %}{% endif %}
-{% if tabs.blog | isOn %}{% include "sections/blog.njk" %}{% endif %}
+{% ifAsync tabs.resume | isOn %}{% include "sections/resume.njk" %}{% endif %}
+{% ifAsync tabs.certificates | isOn %}{% include "sections/certificates.njk" %}{% endif %}
+{% ifAsync tabs.blog | isOn %}{% include "sections/blog.njk" %}{% endif %}

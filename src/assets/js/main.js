@@ -9,6 +9,15 @@
 
 (function () {
 
+  /* ---------- clickjacking guard ----------
+     GitHub Pages cannot send X-Frame-Options / frame-ancestors, so the site
+     refuses to be displayed inside another page's frame. */
+  if (window.top !== window.self) {
+    document.documentElement.hidden = true;
+    return;
+  }
+
+
   /* ---------- sidebar "Show Contacts" toggle (mobile / tablet) ---------- */
 
   const sidebar = document.querySelector('[data-sidebar]');
@@ -17,8 +26,8 @@
   if (sidebar && sidebarBtn) {
     sidebarBtn.addEventListener('click', function () {
       const open = sidebar.classList.toggle('active');
+      // aria-expanded carries the state; the name stays "Show contacts" to match the visible label.
       sidebarBtn.setAttribute('aria-expanded', String(open));
-      sidebarBtn.setAttribute('aria-label', open ? 'Hide contacts' : 'Show contacts');
     });
   }
 
@@ -30,6 +39,7 @@
   const pageIds = Array.from(pages, (p) => p.dataset.page);
 
   const currentPage = () => document.querySelector('article[data-page].active')?.dataset.page;
+  const baseTitle = document.title;
 
   function showPage(id, { focus = false } = {}) {
     if (!pageIds.includes(id)) return;
@@ -48,8 +58,13 @@
       else link.removeAttribute('aria-current');
     });
 
+    const link = document.querySelector(`[data-nav-link="${id}"]`);
+    document.title = id === pageIds[0] || !link ? baseTitle : `${link.textContent.trim()} — ${baseTitle}`;
+
     if (changed) window.scrollTo(0, 0);
 
+    // Move focus to the new tab's heading so screen readers announce the new content.
+    // The heading has tabindex="-1" and no visible focus ring, so nothing changes visually.
     if (focus) {
       const heading = document.querySelector(`article[data-page="${id}"] .article-title`);
       if (heading) heading.focus({ preventScroll: true });
@@ -62,17 +77,20 @@
         event.preventDefault();
         const id = this.dataset.navLink;
         if (location.hash !== `#${id}`) history.pushState(null, '', `#${id}`);
-        showPage(id, { focus: event.detail === 0 }); // detail 0 = keyboard activation
+        showPage(id, { focus: true });
         window.scrollTo(0, 0); // like the original template, a nav click always returns to the top
       });
     });
 
     // Only tab hashes switch tabs; other fragments (e.g. the skip link "#content") are left alone.
-    const routeFromHash = () => showPage(location.hash ? location.hash.slice(1) : pageIds[0]);
+    const routeFromHash = ({ focus = true } = {}) => {
+      const id = location.hash ? location.hash.slice(1) : pageIds[0];
+      showPage(id, { focus: focus && id !== currentPage() });
+    };
 
-    window.addEventListener('popstate', routeFromHash);
+    window.addEventListener('popstate', () => routeFromHash());
 
-    if (location.hash) routeFromHash();
+    if (location.hash) routeFromHash({ focus: false });
   }
 
 
@@ -84,6 +102,7 @@
     const items = filterRoot.querySelectorAll('[data-filter-item]');
     const buttons = filterRoot.querySelectorAll('[data-filter-btn]');
     const select = filterRoot.querySelector('[data-filter-select]');
+    const status = filterRoot.querySelector('[data-filter-status]');
 
     const applyFilter = function (value) {
       items.forEach((item) => {
@@ -95,6 +114,10 @@
         btn.setAttribute('aria-pressed', String(active));
       });
       if (select && select.value !== value) select.value = value;
+      if (status) {
+        const shown = filterRoot.querySelectorAll('[data-filter-item].active').length;
+        status.textContent = `${shown} certificate${shown === 1 ? '' : 's'} shown`;
+      }
     };
 
     buttons.forEach((btn) => btn.addEventListener('click', () => applyFilter(btn.dataset.filterBtn)));
@@ -119,8 +142,11 @@
       if (event.target === dialog) dialog.close();
     });
 
-    // return focus to the card that opened it
-    dialog.addEventListener('close', () => trigger.focus());
+    // Return focus to the card that opened it — unless its tab was hidden meanwhile
+    // (e.g. Back was pressed); then focus is already on the new tab's heading.
+    dialog.addEventListener('close', () => {
+      if (trigger.offsetParent) trigger.focus();
+    });
   });
 
 })();

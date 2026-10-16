@@ -98,6 +98,11 @@ collections:
             label: Photo description (for screen readers)
             widget: string
             required: false
+          - name: protect_avatar
+            label: Protect profile photo from casual saving
+            widget: boolean
+            default: true
+            hint: Blocks right-click "Save image", dragging and long-press saving. No website can prevent screenshots.
           - { name: show_email, label: 'Show email', widget: boolean, default: true }
           - name: email
             label: Email
