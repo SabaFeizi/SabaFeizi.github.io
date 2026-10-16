@@ -1,5 +1,21 @@
 # Launch runbook (Milestone 4)
 
+## Launch record (16 Oct 2026)
+
+| Item | Value |
+|---|---|
+| Live site | https://sabafeizi.github.io (GitHub Pages, source: **GitHub Actions**, HTTPS enforced) |
+| Repository | https://github.com/SabaFeizi/SabaFeizi.github.io (public; Issues and Wiki off) |
+| Admin | https://sabafeizi.github.io/admin/ — "Sign In with GitHub" |
+| Sign-in app | GitHub **OAuth App** "Saba's website admin" on Saba's account; scope requested: `public_repo,user` (the account has no other repositories) |
+| Sign-in helper | Cloudflare Worker `sveltia-cms-auth` on Saba's Cloudflare account — https://sveltia-cms-auth.sabafeizi1.workers.dev; code pinned in [`/auth-worker`](../auth-worker/README.md); `ALLOWED_DOMAINS=sabafeizi.github.io` |
+| Repo protections | Ruleset "Protect main" (no force-push, no deletion); Actions: read-only token, GitHub-owned actions only, outside contributors need approval; `github-pages` environment deploys from `main` only |
+| Security features | Dependabot alerts + security fixes, secret scanning + push protection, CodeQL (checks workflow) |
+| Commit author | Saba's private no-reply address (`…+SabaFeizi@users.noreply.github.com`); no personal email in the history |
+| Verified | Live site: 4 tabs, 10 certificates, CSP meta on every page, raw files (README, sources, original uploads) return 404. Admin: sign-in, edit, publish (~1–2 min) and revert tested end to end. |
+
+The checklist below is the full procedure (kept for future re-deployments).
+
 Step-by-step checklist for publishing the site to Saba's GitHub account and enabling the admin panel.
 Every step that changes an account or a public setting is done **by, or with the explicit approval of, the account owner**.
 Placeholders: `USER` = Saba's GitHub username, `WORKER` = the Cloudflare Worker host name.
