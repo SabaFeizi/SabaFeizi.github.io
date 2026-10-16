@@ -12,10 +12,13 @@ backend:
   name: github
   repo: SabaFeizi/SabaFeizi.github.io
   branch: main
-  # Set at launch: URL of the Sveltia CMS Authenticator (Cloudflare Worker)
-  base_url: https://sveltia-cms-auth.example.workers.dev
+  # Sveltia CMS Authenticator (Cloudflare Worker on Saba's account; code pinned in /auth-worker)
+  base_url: https://sveltia-cms-auth.sabafeizi1.workers.dev
   # Only "Sign in with GitHub" (no pasted access tokens)
   auth_methods: [oauth]
+  # The site repository is public and is the only repository on the account, so the
+  # narrower public_repo scope is enough (Sveltia adds "user" for the profile picture).
+  auth_scope: public_repo
   commit_messages:
     create: "Add {{collection}} “{{slug}}”"
     update: "Update {{collection}} “{{slug}}”"
