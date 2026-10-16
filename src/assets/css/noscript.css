@@ -1,0 +1,8 @@
+/* Loaded only when JavaScript is disabled: show every section stacked, hide the tab bar. */
+article { display: block; }
+article + article { margin-top: 30px; }
+.navbar { display: none; }
+.project-card { cursor: default; }
+.sidebar { max-height: none; }
+.sidebar-info_more { opacity: 1; visibility: visible; }
+.info_more-btn { display: none; }

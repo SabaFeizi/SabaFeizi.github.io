@@ -1,0 +1,66 @@
+{
+  "$id": "defs.schema.json",
+  "$defs": {
+    "nonEmpty": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "safeUrl": {
+      "type": "string",
+      "maxLength": 2000,
+      "pattern": "^(https?://[^\\s<>\"]+|mailto:[^\\s<>\"]+)$"
+    },
+    "optionalUrl": {
+      "anyOf": [
+        {
+          "const": ""
+        },
+        {
+          "$ref": "#/$defs/safeUrl"
+        }
+      ]
+    },
+    "upload": {
+      "type": "string",
+      "pattern": "^/assets/uploads/[A-Za-z0-9._-]+\\.(png|jpe?g|webp|avif)$"
+    },
+    "optionalUpload": {
+      "anyOf": [
+        {
+          "const": ""
+        },
+        {
+          "$ref": "#/$defs/upload"
+        }
+      ]
+    },
+    "icon": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 60
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "optionalDate": {
+      "anyOf": [
+        {
+          "const": ""
+        },
+        {
+          "$ref": "#/$defs/date"
+        }
+      ]
+    },
+    "siteUrl": {
+      "type": "string",
+      "pattern": "^https://[^\\s<>\"/]+(/[^\\s<>\"]*)?/$"
+    }
+  }
+}

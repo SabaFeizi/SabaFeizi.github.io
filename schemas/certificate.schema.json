@@ -1,0 +1,19 @@
+{
+  "$id": "certificate.schema.json",
+  "type": "object",
+  "required": ["title", "issuer", "image"],
+  "additionalProperties": false,
+  "properties": {
+    "title": { "$ref": "defs.schema.json#/$defs/nonEmpty" },
+    "issuer": { "$ref": "defs.schema.json#/$defs/nonEmpty" },
+    "category": { "type": "string", "maxLength": 60 },
+    "issue_date": { "$ref": "defs.schema.json#/$defs/optionalDate" },
+    "expiry_date": { "$ref": "defs.schema.json#/$defs/optionalDate" },
+    "credential_id": { "type": "string", "maxLength": 120 },
+    "verify_url": { "$ref": "defs.schema.json#/$defs/optionalUrl" },
+    "image": { "$ref": "defs.schema.json#/$defs/upload" },
+    "description": { "type": "string", "maxLength": 1000 },
+    "order": { "type": "integer", "minimum": 0, "maximum": 9999 },
+    "visible": { "type": "boolean" }
+  }
+}

@@ -1,0 +1,81 @@
+{%- set certs = certificates | certificateList %}
+{%- set cats = certs | categories %}
+<article class="certificates" data-page="certificates" aria-labelledby="certificates-title">
+
+  <header>
+    <h2 class="h2 article-title" id="certificates-title" tabindex="-1">Certificates</h2>
+  </header>
+
+  <section class="projects" data-filter-root>
+
+    {% if cats.length > 1 %}
+    <ul class="filter-list" aria-label="Filter certificates by category">
+      <li class="filter-item"><button type="button" class="active" data-filter-btn="all" aria-pressed="true">All</button></li>
+      {% for cat in cats %}
+      <li class="filter-item"><button type="button" data-filter-btn="cat-{{ loop.index }}" aria-pressed="false">{{ cat }}</button></li>
+      {% endfor %}
+    </ul>
+
+    <div class="filter-select-box">
+      <label class="visually-hidden" for="certificate-filter">Filter certificates by category</label>
+      <select class="filter-select" id="certificate-filter" data-filter-select>
+        <option value="all">All</option>
+        {% for cat in cats %}<option value="cat-{{ loop.index }}">{{ cat }}</option>{% endfor %}
+      </select>
+      {% icon "chevron-down", "select-icon" %}
+    </div>
+    {% endif %}
+
+    {% if certs.length %}
+    <ul class="project-list">
+      {% asyncEach cert in certs %}
+      <li class="project-item active" data-filter-item data-category="cat-{{ cats.indexOf(cert.category) + 1 }}">
+        <button type="button" class="project-card" data-dialog-open="cert-{{ cert.slug }}" aria-haspopup="dialog">
+
+          <figure class="project-img">
+            <span class="project-item-icon-box">{% icon "eye-outline" %}</span>
+            {% image cert.image, "", [400, 800], "(min-width: 1024px) 280px, (min-width: 768px) 320px, 90vw" %}
+          </figure>
+
+          <h3 class="project-title">{{ cert.title }}</h3>
+          <p class="project-category">{{ cert.issuer }}{% if cert.issue_date %} · <time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | monthYear }}</time>{% endif %}</p>
+
+        </button>
+      </li>
+      {% endeach %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No certificates yet.</p>
+    {% endif %}
+
+  </section>
+
+  {% asyncEach cert in certs %}
+  <dialog class="cert-modal" id="cert-{{ cert.slug }}" aria-labelledby="cert-{{ cert.slug }}-title">
+    <div class="cert-modal-inner">
+      <button type="button" class="modal-close-btn" data-dialog-close aria-label="Close">{% icon "close-outline" %}</button>
+
+      <figure class="cert-modal-img">
+        {% image cert.image, "Certificate: " + cert.title, [800, 1200], "(min-width: 768px) 680px, 90vw" %}
+      </figure>
+
+      <div class="cert-modal-content">
+        <h3 class="h3 modal-title" id="cert-{{ cert.slug }}-title">{{ cert.title }}</h3>
+        <dl class="cert-details">
+          <div><dt>Issuer</dt><dd>{{ cert.issuer }}</dd></div>
+          {% if cert.issue_date %}<div><dt>Issued</dt><dd><time datetime="{{ cert.issue_date | isoDate }}">{{ cert.issue_date | readableDate }}</time></dd></div>{% endif %}
+          {% if cert.expiry_date %}<div><dt>Expires</dt><dd><time datetime="{{ cert.expiry_date | isoDate }}">{{ cert.expiry_date | readableDate }}</time></dd></div>{% endif %}
+          {% if cert.credential_id %}<div><dt>Credential ID</dt><dd>{{ cert.credential_id }}</dd></div>{% endif %}
+        </dl>
+        {% if cert.description %}<p class="cert-description">{{ cert.description }}</p>{% endif %}
+        {% if cert.verify_url %}
+        <a class="form-btn" href="{{ cert.verify_url | safeUrl }}" rel="noopener noreferrer">
+          {% icon "shield-checkmark-outline" %}<span>Verify credential</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </dialog>
+  {% endeach %}
+
+</article>

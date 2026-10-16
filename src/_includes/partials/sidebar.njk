@@ -1,0 +1,80 @@
+{#- Left card: avatar, name, title, contacts, socials (sticky column on wide screens) -#}
+{%- set nameTag = "p" if title else "h1" %}
+<aside class="sidebar" data-sidebar>
+
+  <div class="sidebar-info">
+
+    <figure class="avatar-box">
+      {% image site.avatar, site.avatar_alt, [160, 300], "(min-width: 1250px) 150px, (min-width: 580px) 120px, 80px", { loading: "eager", fetchpriority: "high" } %}
+    </figure>
+
+    <div class="info-content">
+      <{{ nameTag }} class="name" title="{{ site.name }}">
+        {%- for line in site.name_lines %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor -%}
+      </{{ nameTag }}>
+
+      <p class="title">
+        {%- for line in site.title_lines %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor -%}
+      </p>
+    </div>
+
+    <button type="button" class="info_more-btn" data-sidebar-btn aria-expanded="false" aria-controls="sidebar-more" aria-label="Show contacts">
+      <span class="info_more-label">Show Contacts</span>
+      {% icon "chevron-down" %}
+    </button>
+
+  </div>
+
+  <div class="sidebar-info_more" id="sidebar-more">
+
+    <div class="separator"></div>
+
+    <ul class="contacts-list">
+
+      {% if site.email %}
+      <li class="contact-item">
+        <div class="icon-box">{% icon "mail-outline" %}</div>
+        <div class="contact-info">
+          <p class="contact-title">Email</p>
+          <a href="mailto:{{ site.email }}" class="contact-link" title="{{ site.email }}">{{ site.email }}</a>
+        </div>
+      </li>
+      {% endif %}
+
+      {% if site.phone %}
+      <li class="contact-item">
+        <div class="icon-box">{% icon "phone-portrait-outline" %}</div>
+        <div class="contact-info">
+          <p class="contact-title">Phone</p>
+          <a href="tel:{{ site.phone | replace(' ', '') }}" class="contact-link">{{ site.phone }}</a>
+        </div>
+      </li>
+      {% endif %}
+
+      {% if site.location %}
+      <li class="contact-item">
+        <div class="icon-box">{% icon "location-outline" %}</div>
+        <div class="contact-info">
+          <p class="contact-title">Location</p>
+          <address>{{ site.location }}</address>
+        </div>
+      </li>
+      {% endif %}
+
+    </ul>
+
+    <div class="separator"></div>
+
+    <ul class="social-list">
+      {% for social in site.socials %}
+      <li class="social-item">
+        <a href="{{ social.url | safeUrl }}" class="social-link" aria-label="{{ social.label }}" title="{{ social.label }}" rel="noopener noreferrer me">
+          {% icon social.icon %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+  </div>
+
+</aside>

@@ -1,0 +1,44 @@
+{
+  "url": "https://example.github.io/",
+  "name": "Saba Famil Feizi",
+  "name_lines": [
+    "Saba",
+    "Famil Feizi"
+  ],
+  "title_lines": [
+    "Researcher",
+    "in Artificial Intelligence"
+  ],
+  "avatar": "/assets/uploads/avatar.png",
+  "avatar_alt": "Portrait of Saba Famil Feizi",
+  "email": "saba@example.com",
+  "phone": "",
+  "location": "City, Country",
+  "socials": [
+    {
+      "label": "LinkedIn",
+      "icon": "logo-linkedin",
+      "url": "https://www.linkedin.com/"
+    },
+    {
+      "label": "Google Scholar",
+      "icon": "school",
+      "url": "https://scholar.google.com/"
+    },
+    {
+      "label": "GitHub",
+      "icon": "logo-github",
+      "url": "https://github.com/"
+    },
+    {
+      "label": "X (Twitter)",
+      "icon": "logo-twitter",
+      "url": "https://x.com/"
+    }
+  ],
+  "seo": {
+    "title": "Saba Famil Feizi — Personal Website",
+    "description": "Personal website of Saba Famil Feizi: research, resume, certificates and blog.",
+    "share_image": "/assets/uploads/avatar.png"
+  }
+}

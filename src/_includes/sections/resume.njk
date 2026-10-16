@@ -1,0 +1,28 @@
+<article class="resume" data-page="resume" aria-labelledby="resume-title">
+
+  <header>
+    <h2 class="h2 article-title" id="resume-title" tabindex="-1">{{ resume.heading }}</h2>
+  </header>
+
+  {% for section in resume.sections %}
+  <section class="timeline">
+
+    <div class="title-wrapper">
+      <div class="icon-box">{% icon section.icon or "book-outline" %}</div>
+      <h3 class="h3">{{ section.title }}</h3>
+    </div>
+
+    <ol class="timeline-list">
+      {% for item in section.items %}
+      <li class="timeline-item">
+        <h4 class="h4 timeline-item-title">{{ item.title }}</h4>
+        {% if item.period %}<span>{{ item.period }}</span>{% endif %}
+        <div class="timeline-text">{{ item.body | mdBreaks | safe }}</div>
+      </li>
+      {% endfor %}
+    </ol>
+
+  </section>
+  {% endfor %}
+
+</article>

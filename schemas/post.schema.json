@@ -1,0 +1,41 @@
+{
+  "$id": "post.schema.json",
+  "type": "object",
+  "required": [
+    "title",
+    "date",
+    "cover",
+    "excerpt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "$ref": "defs.schema.json#/$defs/nonEmpty"
+    },
+    "date": {
+      "$ref": "defs.schema.json#/$defs/date"
+    },
+    "category": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "cover": {
+      "$ref": "defs.schema.json#/$defs/upload"
+    },
+    "cover_alt": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "excerpt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "external_url": {
+      "$ref": "defs.schema.json#/$defs/optionalUrl"
+    },
+    "draft": {
+      "type": "boolean"
+    }
+  }
+}

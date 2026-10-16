@@ -1,0 +1,13 @@
+{
+  "title": "Cloud Practitioner",
+  "issuer": "Placeholder Cloud Institute",
+  "category": "Cloud",
+  "issue_date": "2023-11-02",
+  "expiry_date": "2026-11-02",
+  "credential_id": "CLD-2023-7781",
+  "verify_url": "https://example.com/verify/cld-2023-7781",
+  "image": "/assets/uploads/certificate-2.png",
+  "description": "Foundational certification covering cloud concepts, security, pricing and core services.",
+  "order": 2,
+  "visible": true
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Deep Learning Specialization",
+  "issuer": "Placeholder Academy",
+  "category": "Machine Learning",
+  "issue_date": "2024-05-12",
+  "expiry_date": "",
+  "credential_id": "ABC-123-456",
+  "verify_url": "https://example.com/verify/abc-123-456",
+  "image": "/assets/uploads/certificate-1.png",
+  "description": "Five-course program covering neural networks, optimisation, convolutional and sequence models.",
+  "order": 1,
+  "visible": true
+}

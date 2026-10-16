@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+---
+<article class="blog-post active" aria-labelledby="post-title">
+
+  <a class="back-link" href="/#blog">{% icon "arrow-back-outline" %}<span>Back to Blog</span></a>
+
+  <header>
+    <h1 class="h2 article-title" id="post-title">{{ title }}</h1>
+    <div class="blog-meta">
+      {% if category %}<p class="blog-category">{{ category }}</p><span class="dot" aria-hidden="true"></span>{% endif %}
+      <time datetime="{{ page.date | isoDate }}">{{ page.date | readableDate }}</time>
+    </div>
+  </header>
+
+  {% if cover %}
+  <figure class="post-cover">
+    {% image cover, cover_alt or "", [800, 1200], "(min-width: 1250px) 820px, 90vw", { loading: "eager" } %}
+  </figure>
+  {% endif %}
+
+  <div class="post-body">
+    {{ content | safe }}
+  </div>
+
+</article>

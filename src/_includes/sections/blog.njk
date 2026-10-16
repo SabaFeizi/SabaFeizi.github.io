@@ -1,0 +1,38 @@
+<article class="blog" data-page="blog" aria-labelledby="blog-title">
+
+  <header>
+    <h2 class="h2 article-title" id="blog-title" tabindex="-1">Blog</h2>
+  </header>
+
+  <section class="blog-posts">
+    {% if collections.blogPosts.length %}
+    <ul class="blog-posts-list">
+      {% asyncEach post in collections.blogPosts %}
+      {%- set d = post.data %}
+      <li class="blog-post-item">
+        <a href="{{ (d.external_url | safeUrl) if d.external_url else post.url }}"{% if d.external_url %} rel="noopener noreferrer"{% endif %}>
+
+          <figure class="blog-banner-box">
+            {% image d.cover, d.cover_alt or "", [400, 800], "(min-width: 768px) 340px, 90vw" %}
+          </figure>
+
+          <div class="blog-content">
+            <div class="blog-meta">
+              <p class="blog-category">{{ d.category }}</p>
+              <span class="dot" aria-hidden="true"></span>
+              <time datetime="{{ post.date | isoDate }}">{{ post.date | readableDate }}</time>
+            </div>
+            <h3 class="h3 blog-item-title">{{ d.title }}</h3>
+            <p class="blog-text">{{ d.excerpt }}</p>
+          </div>
+
+        </a>
+      </li>
+      {% endeach %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No posts yet.</p>
+    {% endif %}
+  </section>
+
+</article>

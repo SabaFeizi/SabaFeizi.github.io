@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="{{ csp }}">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- set pageTitle = (title + " — " + site.name) if title else site.seo.title %}
+  {%- set pageDescription = excerpt or site.seo.description %}
+  <title>{{ pageTitle }}</title>
+  <meta name="description" content="{{ pageDescription }}">
+  <meta property="og:type" content="{{ 'article' if title else 'website' }}">
+  <meta property="og:title" content="{{ pageTitle }}">
+  <meta property="og:description" content="{{ pageDescription }}">
+  {%- if page.url %}
+  <link rel="canonical" href="{{ page.url | htmlBaseUrl(site.url) }}">
+  <meta property="og:url" content="{{ page.url | htmlBaseUrl(site.url) }}">
+  {%- endif %}
+  {%- set shareImage = (cover or site.seo.share_image) | ogImage %}
+  {%- if shareImage %}
+  <meta property="og:image" content="{{ shareImage | htmlBaseUrl(site.url) }}">
+  {%- endif %}
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#9fccd0">
+
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="preload" href="/assets/fonts/poppins-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <noscript><link rel="stylesheet" href="/assets/css/noscript.css"></noscript>
+  <script src="/assets/js/main.js" defer></script>
+
+  <script type="application/ld+json">{{ site | personJsonLd | safe }}</script>
+</head>
+
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <main>
+    {% include "partials/sidebar.njk" %}
+
+    <div class="main-content" id="content">
+      {% include "partials/navbar.njk" %}
+      {{ content | safe }}
+    </div>
+  </main>
+</body>
+</html>

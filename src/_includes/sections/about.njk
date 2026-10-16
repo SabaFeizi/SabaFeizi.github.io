@@ -1,0 +1,39 @@
+<article class="about active" data-page="about" aria-labelledby="about-title">
+
+  <header>
+    <h2 class="h2 article-title" id="about-title" tabindex="-1">{{ about.heading }}</h2>
+  </header>
+
+  <section class="about-text">
+    {{ about.intro | md | safe }}
+  </section>
+
+  {% if about.news and about.news.length %}
+  <section class="about-text news" aria-labelledby="news-title">
+    <h3 class="h3 service-title" id="news-title">{{ about.news_heading }}</h3>
+    <ul class="regular-list">
+      {% for item in about.news %}
+      <li>{{ item.text | mdInline | safe }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if about.nutshell and about.nutshell.length %}
+  <section class="service" aria-labelledby="nutshell-title">
+    <h3 class="h3 service-title" id="nutshell-title">{{ about.nutshell_heading }}</h3>
+    <ul class="service-list">
+      {% for card in about.nutshell %}
+      <li class="service-item">
+        <div class="service-icon-box">{% icon card.icon, "icon-service" %}</div>
+        <div class="service-content-box">
+          <h4 class="h4 service-item-title">{{ card.title }}</h4>
+          <div class="service-item-text">{{ card.text | mdBreaks | safe }}</div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+</article>

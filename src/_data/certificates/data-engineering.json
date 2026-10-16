@@ -1,0 +1,13 @@
+{
+  "title": "Data Engineering Fundamentals",
+  "issuer": "Placeholder Academy",
+  "category": "Machine Learning",
+  "issue_date": "2022-09-15",
+  "expiry_date": "",
+  "credential_id": "DEF-0915",
+  "verify_url": "https://example.com/verify/def-0915",
+  "image": "/assets/uploads/certificate-4.png",
+  "description": "Pipelines, data modelling, batch and stream processing.",
+  "order": 4,
+  "visible": true
+}

@@ -1,0 +1,32 @@
+{
+  "$id": "about.schema.json",
+  "type": "object",
+  "required": ["heading", "intro"],
+  "additionalProperties": false,
+  "properties": {
+    "heading": { "$ref": "defs.schema.json#/$defs/nonEmpty" },
+    "intro": { "$ref": "defs.schema.json#/$defs/text" },
+    "news_heading": { "type": "string", "maxLength": 120 },
+    "news": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object", "required": ["text"], "additionalProperties": false,
+        "properties": { "text": { "type": "string", "minLength": 1, "maxLength": 2000 } }
+      }
+    },
+    "nutshell_heading": { "type": "string", "maxLength": 120 },
+    "nutshell": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object", "required": ["icon", "title", "text"], "additionalProperties": false,
+        "properties": {
+          "icon": { "$ref": "defs.schema.json#/$defs/icon" },
+          "title": { "$ref": "defs.schema.json#/$defs/nonEmpty" },
+          "text": { "type": "string", "maxLength": 3000 }
+        }
+      }
+    }
+  }
+}

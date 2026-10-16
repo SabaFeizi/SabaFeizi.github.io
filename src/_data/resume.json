@@ -1,0 +1,64 @@
+{
+  "heading": "Resume",
+  "sections": [
+    {
+      "title": "Education",
+      "icon": "book-outline",
+      "items": [
+        {
+          "title": "Ph.D. in Artificial Intelligence",
+          "period": "Sep. 2022 — present",
+          "body": "[University Name, Department](https://example.com/)  \nScholarship or award name;  \nUnder the supervision of Prof. Firstname Lastname;  \n**Thesis topic:** A one-sentence description of the thesis topic."
+        },
+        {
+          "title": "Master of Science (M.Sc.) in Computer Science",
+          "period": "Sep. 2020 — Aug. 2022",
+          "body": "[University Name](https://example.com/)  \nGrade: placeholder;  \n**Thesis topic:** A one-sentence description of the master's thesis."
+        },
+        {
+          "title": "Bachelor of Science (B.Sc.)",
+          "period": "Sep. 2016 — Jun. 2020",
+          "body": "[University Name](https://example.com/)  \nGPA: placeholder, honours."
+        }
+      ]
+    },
+    {
+      "title": "Experience",
+      "icon": "briefcase-outline",
+      "items": [
+        {
+          "title": "Research Intern",
+          "period": "Jun. 2024 — Aug. 2024",
+          "body": "[Company or Lab Name, City, Country](https://example.com/)  \nA short description of what you worked on and what came out of it."
+        },
+        {
+          "title": "Research Assistant",
+          "period": "Jan. 2021 — Aug. 2022",
+          "body": "[Institute Name](https://example.com/)  \nA short description of your responsibilities and results."
+        }
+      ]
+    },
+    {
+      "title": "Teaching Experience",
+      "icon": "people-outline",
+      "items": [
+        {
+          "title": "Teaching Assistant: Course Name",
+          "period": "Jan. 2023 — May 2023",
+          "body": "[University Name](https://example.com/)  \nLed weekly tutorials and helped students prepare for exams."
+        }
+      ]
+    },
+    {
+      "title": "Service",
+      "icon": "ribbon-outline",
+      "items": [
+        {
+          "title": "Reviewer: Conference or Journal Name",
+          "period": "2025",
+          "body": "[Venue website](https://example.com/)"
+        }
+      ]
+    }
+  ]
+}

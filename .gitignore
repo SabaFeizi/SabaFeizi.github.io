@@ -1,0 +1,12 @@
+node_modules/
+_site/
+.cache/
+test-results/
+playwright-report/
+.DS_Store
+*.log
+.env
+.env.*
+
+# Local developer tooling (agents, launch config) — not part of the site
+.claude/
